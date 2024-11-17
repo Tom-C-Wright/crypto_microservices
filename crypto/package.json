@@ -1,3 +1,13 @@
 {
-    "name": "crypto"
+    "name": "crypto",
+    "type": "module",
+    "scripts": {
+        "deploy": "./bin/deploy.sh",
+        "build": "serverless package"
+    },
+    "devDependencies": {
+        "@types/aws-lambda": "^8.10.145",
+        "serverless": "^4.4.10",
+        "typescript": "^5.6.3"
+    }
 }

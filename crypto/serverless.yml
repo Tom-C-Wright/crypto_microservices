@@ -1,0 +1,35 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: twright
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: crypto
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: crypto
+state: s3-state-resolver
+
+stages:
+  default:
+    resolvers:
+      generic:
+        type: aws
+        s3-state-resolver:
+          type: s3
+          region: "ap-southeast-2"
+          bucketName: nimo-challenge-serverless-deployment
+
+package:
+  excludeDevDependencies: true
+  individually: true
+  exclude: 
+    - .*/**
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: "ap-southeast-2"
+  deploymentBucket: 
+    name: nimo-challenge-serverless-deployment
+
+functions:
+  email_price:
+    handler: index.EmailPriceHandler
+    name: crypto_email_price
