@@ -35,3 +35,10 @@ functions:
     name: scribe_write_event_log
     environment:
       DEBUG_LOGGING: TRUE
+      # RDS connection variables
+      RDS_HOSTNAME: ${env:RDS_HOSTNAME}
+      RDS_PORT: ${env:RDS_PORT}
+      RDS_USERNAME: ${env:RDS_USERNAME}
+      RDS_PASSWORD: ${env:RDS_PASSWORD}
+      # Event log db connection
+      RDS_DB_NAME: ${env:EVENT_LOG_DB_NAME}
