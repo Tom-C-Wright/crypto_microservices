@@ -19,17 +19,21 @@ stages:
 package:
   excludeDevDependencies: true
   individually: true
-  exclude: 
+  exclude:
     - .*/**
 
 provider:
   name: aws
   runtime: nodejs20.x
   region: "ap-southeast-2"
-  deploymentBucket: 
+  deploymentBucket:
     name: nimo-challenge-serverless-deployment
 
 functions:
   email_price:
-    handler: index.EmailPriceHandler
+    handler: handlers.EmailPrice
     name: crypto_email_price
+    environment:
+      DEBUG_LOGGING: TRUE
+      COINGECKO_API_KEY: ${env:COINGECKO_API_KEY}
+      SENDER_EMAIL: ${env:SENDER_EMAIL}

@@ -6,22 +6,23 @@ import { config } from "./config";
 
 chai.use(chaiHttp);
 
-export default describe("POST /search/email_price", async() => {
+export default describe("POST /search/email_price", () => {
   it("200 on valid request", async () => {
-
     const body = {
-        test: "",
-    }
-    
+      coin: "bitcoin",
+      email: "tom.wright.dev@gmail.com",
+    };
+
     const response = await fetch(`${config.baseURL}/search/email_price`, {
-        method: "POST",
-        body: JSON.stringify(body),
-        headers: {
-            "x-api-key": config.apiKey,
-        }
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: {
+        "x-api-key": config.apiKey,
+      },
     });
 
-    assert(response.status === 200);
+    if (!response.ok) {
+      throw new Error(`${response.status}: ${response.statusText}`);
+    }
   });
-  
 });
