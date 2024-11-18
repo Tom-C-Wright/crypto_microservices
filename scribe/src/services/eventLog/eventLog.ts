@@ -2,6 +2,8 @@ import { QueryConfig } from "pg";
 import { PostgresDatabaseService } from "../database/postgres";
 import { Logger } from "../logger";
 
+export type EventType = "SEARCH" | "ERROR";
+
 export interface EventLog {
   id: string;
   date: string;
@@ -25,19 +27,36 @@ export class EventLogService {
     this.databaseService = params.databaseService;
   }
 
-  protected async logEvent(event: EventLog): Promise<void> {
+  /**
+   * Generate a date string from the provided date object.
+   */
+  protected formatDate(date: Date): string {
+    return date.toISOString();
+  }
+
+  public async logEvent(params: {
+    service: string;
+    action: EventType;
+    data: string;
+    date: Date;
+  }): Promise<void> {
     try {
       const createLogStatement: QueryConfig = {
         name: "create_event_log",
         text: "INSERT INTO events (service, action, data, date) VALUES ($1, $2, $3, $4)",
-        values: [event.service, event.action, event.data, event.date],
+        values: [
+          params.service,
+          params.action,
+          params.data,
+          this.formatDate(params.date),
+        ],
       };
 
       await this.databaseService.query(createLogStatement);
     } catch (error) {
       this.logger.error({
         message: "Failed to insert event in database",
-        data: `${(error as Error).message}\n${JSON.stringify(event)}`,
+        data: `${(error as Error).message}\n${JSON.stringify(params)}`,
       });
     }
   }

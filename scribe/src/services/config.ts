@@ -16,11 +16,15 @@ export class Config {
     return process.env.RDS_USERNAME || "";
   }
 
-  getRdsPassowrd(): string {
+  getRdsPassword(): string {
     return process.env.RDS_PASSWORD || "";
   }
 
-  getRdsPort(): string {
-    return process.env.RDS_PORT || "";
+  getRdsPort(): number {
+    return parseInt(process.env.RDS_PORT || "3000");
+  }
+
+  getEventLogDatabaseName(): string {
+    return process.env.EVENT_LOG_DB_NAME || "";
   }
 }

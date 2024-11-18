@@ -1,7 +1,7 @@
 #!/bin/bash
 
 HANDLERS=(
-    "write_log"
+    "write_event_log"
 )
 
 for name in ${HANDLERS[@]}; do

@@ -30,7 +30,7 @@ provider:
     name: nimo-challenge-serverless-deployment
 
 functions:
-  write_log:
+  write_event_log:
     handler: handlers.WriteEventLog
     name: scribe_write_event_log
     environment:
@@ -41,4 +41,4 @@ functions:
       RDS_USERNAME: ${env:RDS_USERNAME}
       RDS_PASSWORD: ${env:RDS_PASSWORD}
       # Event log db connection
-      RDS_DB_NAME: ${env:EVENT_LOG_DB_NAME}
+      EVENT_LOG_DB_NAME: ${env:EVENT_LOG_DB_NAME}
