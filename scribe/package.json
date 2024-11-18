@@ -1,3 +1,24 @@
 {
-    "name": "scribe"
+  "name": "scribe",
+  "type": "module",
+  "scripts": {
+    "serverless": "serverless",
+    "test": "mocha -r dotenv/config",
+    "deploy": "./bin/deploy.sh",
+    "build": "serverless package"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.145",
+    "@types/chai": "^5.0.1",
+    "@types/mocha": "^10.0.9",
+    "@types/node": "^22.9.0",
+    "chai": "^5.1.2",
+    "chai-http": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "mocha": "^10.8.2",
+    "serverless": "^4.4.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {}
 }
