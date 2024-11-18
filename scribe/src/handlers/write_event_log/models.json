@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "writeEventLogRequestBody",
+  "type": "object",
+  "properties": {
+    "service": {
+      "type": "string"
+    },
+    "data": {
+      "type": "string"
+    },
+    "action": {
+      "type": "string"
+    }
+  },
+  "required": ["service", "action", "data"]
+}
