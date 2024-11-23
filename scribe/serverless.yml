@@ -16,6 +16,11 @@ stages:
           region: "ap-southeast-2"
           bucketName: nimo-challenge-serverless-deployment
 
+build:
+  esbuild:
+    external:
+      - 'pg'
+
 package:
   excludeDevDependencies: true
   individually: true
