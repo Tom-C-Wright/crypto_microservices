@@ -8,7 +8,7 @@ import util from "util";
  * Service for handling connection and queries to Postgres database.
  */
 export class PostgresDatabaseService {
-  protected postgresClient: pg.Client;
+  protected postgresPool: pg.Pool;
   protected logger: Logger;
 
   constructor(params: {
@@ -21,7 +21,7 @@ export class PostgresDatabaseService {
   }) {
     this.logger = params.logger;
 
-    this.postgresClient = new pg.Client({
+    this.postgresPool = new pg.Pool({
       user: params.userName,
       password: params.password,
       host: params.host,
@@ -35,16 +35,7 @@ export class PostgresDatabaseService {
    */
   public async query(preparedStatement: pg.QueryConfig): Promise<void> {
     try {
-      await this.postgresClient.connect();
-
-      const result = await this.postgresClient.query(preparedStatement);
-
-      this.logger.debug({
-        message: "postgres query result",
-        data: JSON.stringify(result),
-      });
-
-      await this.postgresClient.end();
+      const result = await this.postgresPool.query(preparedStatement);
     } catch (error) {
       this.logger.error({
         message: "Failed to write data to RDS",
