@@ -1,7 +1,11 @@
 import { AppStatus, Client, ClientResponse } from "../../common/client";
 import { Config } from "../../services/config";
 import { PostgresDatabaseService } from "../../services/database/postgres";
-import { EventLogService, EventType } from "../../services/eventLog/eventLog";
+import {
+  EventService,
+  EventType,
+  isOfEventType,
+} from "../../services/events/events";
 import { Logger } from "../../services/logger";
 import { BasicLogger } from "../../services/logger/cloudwatch";
 
@@ -9,25 +13,23 @@ import { BasicLogger } from "../../services/logger/cloudwatch";
  * Request body for requests to write_log handler.
  */
 // TODO generate JSON schema from these interfaces.
-export interface WriteEventLogRequestBody {
+export interface WriteEventRequestBody {
   service: string;
   action: EventType;
-  data: string;
+  data: any;
 }
 
 /**
  * Client responsible for handling the logic for the Email Price handler.
  */
-export class WriteEventLogClient
-  implements Client<WriteEventLogRequestBody, void>
-{
+export class WriteEventClient implements Client<WriteEventRequestBody, void> {
   // Services
   protected logger: Logger;
-  protected eventLogService: EventLogService;
+  protected eventService: EventService;
 
-  constructor(params: { logger: Logger; eventLogService: EventLogService }) {
+  constructor(params: { logger: Logger; eventService: EventService }) {
     this.logger = params.logger;
-    this.eventLogService = params.eventLogService;
+    this.eventService = params.eventService;
   }
 
   async handle(
@@ -44,10 +46,17 @@ export class WriteEventLogClient
       // Log event for current date and time.
       const dateNow = new Date();
 
-      await this.eventLogService.logEvent({
+      const event = {
         ...request,
         date: dateNow,
+      };
+
+      this.logger.debug({
+        message: "Writing event to database",
+        data: JSON.stringify(event),
       });
+
+      await this.eventService.writeEvent(event);
       return {
         status: AppStatus.SUCCESS,
       };
@@ -67,7 +76,7 @@ export class WriteEventLogClient
 /**
  * Helper function for initializing Write Log client.
  */
-export function buildWriteEventLogClient(): WriteEventLogClient {
+export function buildWriteEventClient(): WriteEventClient {
   // TODO build a centralised service to instantiate different services based on config values.
   const config = new Config();
 
@@ -80,16 +89,17 @@ export function buildWriteEventLogClient(): WriteEventLogClient {
     password: config.getRdsPassword(),
     host: config.getRdsHostname(),
     port: config.getRdsPort(),
-    database: config.getEventLogDatabaseName(),
+    database: config.getEventDatabaseName(),
+    logger: basicLogger,
   });
 
-  const eventLogService = new EventLogService({
+  const eventService = new EventService({
     logger: basicLogger,
     databaseService: postgresDatabaseService,
   });
 
-  return new WriteEventLogClient({
+  return new WriteEventClient({
     logger: basicLogger,
-    eventLogService,
+    eventService,
   });
 }

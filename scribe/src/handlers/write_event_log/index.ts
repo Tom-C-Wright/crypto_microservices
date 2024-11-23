@@ -1,8 +1,8 @@
 import { APIGatewayProxyHandler, APIGatewayProxyResult } from "aws-lambda";
-import { WriteEventLogRequestBody } from "./models";
-import { buildWriteEventLogClient, WriteEventLogClient } from "./client";
+import { buildWriteEventClient, WriteEventRequestBody } from "./client";
+import util from "util";
 
-const client = buildWriteEventLogClient();
+const client = buildWriteEventClient();
 
 export const handler: APIGatewayProxyHandler = async (
   event,
@@ -13,7 +13,7 @@ export const handler: APIGatewayProxyHandler = async (
       throw new Error("Missing request body.");
     }
 
-    const requestBody = JSON.parse(event.body) as WriteEventLogRequestBody;
+    const requestBody = JSON.parse(event.body) as WriteEventRequestBody;
 
     await client.handle(requestBody);
 
@@ -22,6 +22,9 @@ export const handler: APIGatewayProxyHandler = async (
       body: "",
     };
   } catch (error) {
+    console.log(event);
+    console.log(util.format(error));
+
     return {
       statusCode: 500,
       body: "",

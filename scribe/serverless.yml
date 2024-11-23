@@ -31,7 +31,7 @@ provider:
 
 functions:
   write_event_log:
-    handler: handlers.WriteEventLog
+    handler: handlers.WriteEvent
     name: scribe_write_event_log
     environment:
       DEBUG_LOGGING: TRUE

@@ -39,6 +39,7 @@ export class EmailPriceClient implements Client<EmailPriceRequestBody, void> {
         };
       }
 
+
       const searchResults = await this.cryptoInformationService.search({
         query: request.coin,
       });

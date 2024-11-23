@@ -24,7 +24,7 @@ export class Config {
     return parseInt(process.env.RDS_PORT || "3000");
   }
 
-  getEventLogDatabaseName(): string {
+  getEventDatabaseName(): string {
     return process.env.EVENT_LOG_DB_NAME || "";
   }
 }

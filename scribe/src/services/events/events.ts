@@ -4,7 +4,11 @@ import { Logger } from "../logger";
 
 export type EventType = "SEARCH" | "ERROR";
 
-export interface EventLog {
+export function isOfEventType(input: string): input is EventType {
+  return ["SEARCH", "ERROR"].includes(input);
+}
+
+export interface Event {
   id: string;
   date: string;
   service: string;
@@ -15,7 +19,7 @@ export interface EventLog {
 /**
  * Service responsible for handling the persistence and retrieval of event log data.
  */
-export class EventLogService {
+export class EventService {
   protected logger: Logger;
   protected databaseService: PostgresDatabaseService;
 
@@ -34,7 +38,7 @@ export class EventLogService {
     return date.toISOString();
   }
 
-  public async logEvent(params: {
+  public async writeEvent(params: {
     service: string;
     action: EventType;
     data: string;
@@ -43,7 +47,7 @@ export class EventLogService {
     try {
       const createLogStatement: QueryConfig = {
         name: "create_event_log",
-        text: "INSERT INTO events (service, action, data, date) VALUES ($1, $2, $3, $4)",
+        text: "INSERT INTO events (service_name, action, data, created_at) VALUES ($1, $2, $3, $4)",
         values: [
           params.service,
           params.action,
@@ -51,6 +55,11 @@ export class EventLogService {
           this.formatDate(params.date),
         ],
       };
+
+      this.logger.info({
+        message: "Structured query",
+        data: JSON.stringify(createLogStatement),
+      });
 
       await this.databaseService.query(createLogStatement);
     } catch (error) {
