@@ -14,33 +14,33 @@ export class BasicLogger implements Logger {
     this.debugLogging = params.debugLoggingEnabled;
   }
 
-  private WriteEventLog(log: BasicLogInput) {
-    process.stdout.write(JSON.stringify(log));
+  private WriteLog(log: BasicLogInput) {
+    process.stdout.write(JSON.stringify(log) + `\n`);
   }
 
   debug(log: LogInput): void {
-    this.WriteEventLog({
+    this.WriteLog({
       level: "debug",
       ...log,
     });
   }
 
   info(log: LogInput): void {
-    this.WriteEventLog({
+    this.WriteLog({
       level: "info",
       ...log,
     });
   }
 
   warn(log: LogInput): void {
-    this.WriteEventLog({
+    this.WriteLog({
       level: "warn",
       ...log,
     });
   }
 
   error(log: LogInput): void {
-    this.WriteEventLog({
+    this.WriteLog({
       level: "error",
       ...log,
     });
