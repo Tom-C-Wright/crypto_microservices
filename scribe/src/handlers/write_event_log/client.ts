@@ -32,12 +32,10 @@ export class WriteEventClient implements Client<WriteEventRequestBody, void> {
     this.eventService = params.eventService;
   }
 
-  async handle(
-    request: WriteEventLogRequestBody
-  ): Promise<ClientResponse<void>> {
+  async handle(request: WriteEventRequestBody): Promise<ClientResponse<void>> {
     try {
       // Validate request
-      if (request.action !== "SEARCH" && request.action !== "ERROR") {
+      if (!isOfEventType(request.action)) {
         return {
           status: AppStatus.ERROR,
         };
